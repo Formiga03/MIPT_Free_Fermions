@@ -1,12 +1,12 @@
 import os
 
-base_target = os.path.join("data", "2D")
-base_source = os.path.join("DT", "2D")
+base_target = os.path.join("data", "1D")
+base_source = os.path.join("DT", "1D")
 
-sizes = [12, 16]
+sizes = [25,50,100]
 
 for ii in sizes:
-    folder_name = f"syst_L={ii}x{ii}"
+    folder_name = f"syst_L={ii}"
     
     current_source_dir = os.path.join(base_source, folder_name)
     current_target_dir = os.path.join(base_target, folder_name)
