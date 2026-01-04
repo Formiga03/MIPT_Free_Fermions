@@ -162,13 +162,15 @@ def plot_mp_vs_var_quant(Data1:list[tuple], sizes1:list[int],
 def plot_mp_vs_quant(Data1:list[tuple], sizes1:list[int],  
                      plot_title:str,    filename:str,   
                      ylabel:str="",     xlimits:tuple=(), 
-                     xlabel:str="Measurament Probability", func:Callable[[float], float]=None):
+                     xlabel:str="Measurament Probability", 
+                     func_quant:Callable[[float], float]=None,
+                     func_size1:Callable[[float], float]=None):
     
     fig, axs = plt.subplots(1, 1, figsize=(10, 5))
     for jj in range(len(sizes1)):
         var1 = Data1[jj][1]
-        if func: var1 = [func(Data1[jj][1][ii]) for ii in range(len(Data1[jj][0]))]
-        plt.plot(Data1[jj][0], Data1[jj][1], "-o", label=f"L={sizes1[jj]}")
+        if func_size1: var1 = [func_size1(Data1[jj][1][ii], sizes1[jj]) for ii in range(len(Data1[jj][0]))]
+        plt.plot(Data1[jj][0], var1, "-o", label=f"L={sizes1[jj]}")
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
 

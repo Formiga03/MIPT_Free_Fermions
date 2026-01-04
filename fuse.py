@@ -3,7 +3,7 @@ import os
 base_target = os.path.join("data", "1D")
 base_source = os.path.join("DT", "1D")
 
-sizes = [25,50,100]
+sizes = [25, 50, 100]
 
 for ii in sizes:
     folder_name = f"syst_L={ii}"

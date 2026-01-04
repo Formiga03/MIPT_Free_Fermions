@@ -12,10 +12,10 @@ sizes = [[25, 50, 100, 250, 500, 1000],
 kws = [ ["EEqq", "(500,1,last(30))", "Ballistic"],
         ["EEqq", "(500,0.05,last(30))", "Ballistic"]]
 
-Nkws = [ [],
-        ["p=0.6","p=0.7","p=0.8","p=0.9"]]
+Nkws = [["p=0.6","p=0.7","p=0.8","p=0.9", "p=0.0_"],
+        ["p=0.6","p=0.7","p=0.8","p=0.9", "p=0.0_"]]
 
-for dm in [1]:
+for dm in [0]:
     T_S_plot = False
     P_S_plot = True
     sizes1 = sizes[dm]
@@ -54,11 +54,17 @@ for dm in [1]:
 
     if P_S_plot:
 
-        
         plot_title = f"Measurement Probability vs. Averaged Entanglement\nEntropy (Time Step = {dt8[1][0][2]}) {dt8[1][0][-1]}D - Ballistic Regime"
         filename   = f"plots/MPvsS_Ave_L={sizes1}_T=({dt8[1][0][1]},{dt8[1][0][2]})_Ballistic_{dt8[1][0][-1]}D.png"
         ylabel     = "E[S]"
         plot_mp_vs_quant(Data1, sizes1, plot_title, filename, ylabel=ylabel, xlimits=(0,0.5))
+        
+        func1  = lambda xx1, xx2: xx1/xx2
+        plot_title = f"Measurement Probability vs. Averaged Entanglement\nEntropy (Time Step = {dt8[1][0][2]}) {dt8[1][0][-1]}D - Ballistic Regime"
+        filename   = f"plots/MPvsS_Ave(S|L)_L={sizes1}_T=({dt8[1][0][1]},{dt8[1][0][2]})_Ballistic_{dt8[1][0][-1]}D.png"
+        ylabel     = "E[S]/L"
+        plot_mp_vs_quant(Data1, sizes1, plot_title, filename, ylabel=ylabel, xlimits=(0,0.5), func_size1=func1)
+
 
         Dt = invert_data_structure(Data1.copy(), sizes1)
         
@@ -66,7 +72,7 @@ for dm in [1]:
         filename   = f"plots/LvsS_Ave_L={sizes1}_T=({dt8[1][0][1]},{dt8[1][0][2]})_Ballistic_{dt8[1][0][-1]}D.png"
         xlabel     = "L"
         ylabel     = "E[S]"
-        plot_mp_vs_quant(Dt[0], Dt[1], plot_title, filename, xlabel=xlabel, ylabel=ylabel, xlimits=(0,0.5))
+        plot_mp_vs_quant(Dt[0], Dt[1], plot_title, filename, xlabel=xlabel, ylabel=ylabel)
 
         # Linear Case:
         perimeter  = lambda xx: 2*xx-4
@@ -75,9 +81,17 @@ for dm in [1]:
         ylabel     = "dE[S]/dL"
         plot_mp_vs_var_quant(Data1, sizes1, plot_title, filename, ylabel=ylabel, func=perimeter, xlimits=(0,0.5))
 
-        # Quadratic Case:
-        area = lambda xx: xx*xx/4
-        plot_title = f"Measurement Probability vs. Quadratic Variations of Averaged Entanglement\nEntropy {dt8[1][0][-1]}D - Ballistic Regime"
-        filename   = f"plots/MPvsVar_S_Ave(dS\dL**2))_L={sizes1}_T=({dt8[1][0][1]},{dt8[1][0][2]})_Ballistic_{dt8[1][0][-1]}D.png"
-        ylabel     = "dE[S]/dL**2"
-        plot_mp_vs_var_quant(Data1, sizes1, plot_title, filename, ylabel=ylabel, func=area, xlimits=(0,0.5))
+        if sims[dm]=="1D":
+            # Log Case:
+            area = lambda xx: np.log(xx)
+            plot_title = f"Measurement Probability vs. Log. Variations of Averaged Entanglement\nEntropy {dt8[1][0][-1]}D - Ballistic Regime"
+            filename   = f"plots/MPvsVar_S_Ave(dS\dlog(L))_L={sizes1}_T=({dt8[1][0][1]},{dt8[1][0][2]})_Ballistic_{dt8[1][0][-1]}D.png"
+            ylabel     = "dE[S]/dlog(L)"
+            plot_mp_vs_var_quant(Data1, sizes1, plot_title, filename, ylabel=ylabel, func=area, xlimits=(0,0.5))
+        if sims[dm]=="2D":
+            # Quadratic Case:
+            area = lambda xx: xx*xx/4
+            plot_title = f"Measurement Probability vs. Quadratic Variations of Averaged Entanglement\nEntropy {dt8[1][0][-1]}D - Ballistic Regime"
+            filename   = f"plots/MPvsVar_S_Ave(dS\dL**2))_L={sizes1}_T=({dt8[1][0][1]},{dt8[1][0][2]})_Ballistic_{dt8[1][0][-1]}D.png"
+            ylabel     = "dE[S]/dL**2"
+            plot_mp_vs_var_quant(Data1, sizes1, plot_title, filename, ylabel=ylabel, func=area, xlimits=(0,0.5))

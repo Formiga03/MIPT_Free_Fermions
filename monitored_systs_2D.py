@@ -21,32 +21,31 @@ np.set_printoptions(threshold=sys.maxsize, linewidth=sys.maxsize)
 ###############################################################################
 # Simulation parameters
 ###############################################################################
-to_calc, accumulate, Time, t_step, EEnt_num, Tmode, ps, Ls, EntEntr, ballistic = get_simulation_params()
+#to_calc, accumulate, Time, t_step, EEnt_num, Tmode, ps, Ls, EntEntr, ballistic = get_simulation_params()
 # Quantities:
 quants =  ["EEnt", "IPR"]
-# Time instants for measurements
-if "tot" in Tmode:  Steps1 = list(range(Time))
-if "last" in Tmode: Steps1 = [0] + [Time - ii for ii in range(EEnt_num)]
-"""
-to_calc = quants
+
+to_calc = ["EEnt"]
 accumulate = True
 # Time Parameters
 Time = 500
 t_step = 0.05
 EEnt_num = 500
 Tmode = f"last({EEnt_num})"
+# Time instants for measurements
+if "tot" in Tmode:  Steps1 = list(range(Time))
+if "last" in Tmode: Steps1 = [0] + [Time - ii for ii in range(EEnt_num)]
 
 # Measurement probability parameters
-pmax = 0.45
-pstep = 0.1
-ps = list(np.arange(0.4, pmax, pstep))
+pmax = 0.55
+pstep = 0.05
+ps = list(np.arange(0, pmax, pstep))
 # System sizes to scan
-Ls = [20]         
+Ls = [12, 16, 20]         
 # Entanglement Entropy Space
-EntEntr = "1|4"
+EntEntr = "1|4+1|4"
 # Time Evolution Regime
 ballistic = True
-"""
 
 # Amplitude 
 amp = 0.01
@@ -73,7 +72,7 @@ def main():
         for L in Ls:
             print("================================================================")
             print(f"L = {L}x{L}")
-            dir_name = f"data/2D/syst_L={L}x{L}"
+            dir_name = f"data/2D/syst_L={L}x{L}_test"
             os.makedirs(dir_name, exist_ok=True)
 
             # Build unitary step operator U0 and initial correlation matrix C0

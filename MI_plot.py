@@ -6,11 +6,13 @@ from src.reader_funcs import *
 sims = ["1D","2D"]
 
 sizes = [[25, 50, 100, 250, 500],
-        [12, 16, 20, 24, 28]]
+        [12, 16, 20, 24, 28, 36]]
 
 kws = [ ["MI", "(500,1,last(30))", "Ballistic"],
         ["MI", "(500,0.05,last(30))", "Ballistic"]]
 
+Nkws = [ ["p=0.6","p=0.7","p=0.8","p=0.9"],
+        ["p=0.6","p=0.7","p=0.8","p=0.9"]]
 for dm in [0]:
     T_S_plot = False
     P_S_plot = True

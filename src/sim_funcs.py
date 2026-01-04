@@ -146,6 +146,19 @@ def neel_state_creator_RRG(height: int) -> np.ndarray:
         if ii%2!=0: lst += [1]*(3**ii)
     return np.diag(lst)
 
+def brick_structure_pair_evol(N:int, pair:bool)->np.ndarray:
+    A = np.zeros((N,N), dtype=complex)
+    
+    if pair:
+        for jj in range(0, N, 2):
+            A[jj:jj+2, jj:jj+2] = unitary_group.rvs(2)
+    else:      
+        for kk in range(1, N-1, 2):
+            A[kk:kk+2, kk:kk+2] = unitary_group.rvs(2)
+        A[np.ix_([0,N-1], [0,N-1])] = unitary_group.rvs(2)
+
+    return A
+
 ###############################################################################
 # Quantities Calculation Funcs.
 ###############################################################################
@@ -203,6 +216,22 @@ def entanglement_entropy_quarter(C: np.ndarray) -> float:
     for ii in range(L//2):
         idx0 += [x for x in range(2*ii*L//2, (2*ii+1)*L//2)]
     
+    CA = C[np.ix_(idx0, idx0)].astype(complex, copy=False)
+    n = np.linalg.eigvalsh(CA).real
+    n = np.clip(n, 1e-12, 1 - 1e-12)
+
+    return float(-np.sum(n*np.log(n) + (1-n)*np.log(1-n)))
+
+def entanglement_entropy_quarter_quarter(C: np.ndarray) -> float:
+    L = int(np.sqrt(C.shape[0]))
+    C = np.asarray(C)
+    idx0 = []
+    for ii in range(L):
+        for jj in range(L//4):
+            idx0.append(ii*L+jj)
+            idx0.append(ii*L+jj+L//2)
+
+    idx0 = sorted(idx0)
     CA = C[np.ix_(idx0, idx0)].astype(complex, copy=False)
     n = np.linalg.eigvalsh(CA).real
     n = np.clip(n, 1e-12, 1 - 1e-12)
@@ -306,6 +335,7 @@ def run_one_simulation_general(args):
             # EEnt.:
             if EntEntr=="1|2" or EntEntr=="": S = entanglement_entropy_half(C)
             if EntEntr=="1|4": S = entanglement_entropy_quarter(C)
+            if EntEntr=="1|4+1|4": S = entanglement_entropy_quarter_quarter(C)
             if EntEntr=="bethe": S = entanglement_entropy_bethe(C, height)
             data_EEnt.append(S)
 
@@ -340,6 +370,7 @@ def run_one_simulation_EEnt(args):
             #EEnt.:
             if EntEntr=="1|2" or EntEntr=="": S = entanglement_entropy_half(C)
             if EntEntr=="1|4": S = entanglement_entropy_quarter(C)
+            if EntEntr=="1|4+1|4": S = entanglement_entropy_quarter_quarter(C)
             if EntEntr=="bethe": S = entanglement_entropy_bethe(C, height)
             data_EEnt.append(S)
 

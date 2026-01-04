@@ -8,13 +8,14 @@ from src.reader_funcs import *
 sims = ["1D","2D"]
 
 sizes = [[25, 50, 100, 250, 500],
-        [12, 16, 20, 24]]
+        [12, 16, 20, 24, 28, 32, 36]]
 
 kws = [ ["IPR", "(500,1,last(30))", "Ballistic"],
         ["IPR", "(500,0.05,last(30))", "Ballistic"]]
-
+Nkws = [ ["p=0.6","p=0.7","p=0.8","p=0.9"],
+        ["p=0.6","p=0.7","p=0.8","p=0.9"]]
 lmbd_func = lambda x: -np.log(2*x/(L))
-for dm in [0,1]:
+for dm in [0]:
     T_S_plot = False
     P_S_plot = True
     sizes1 = sizes[dm]
@@ -25,7 +26,7 @@ for dm in [0,1]:
     print(f"-{sims[dm]}:")
     for L in tqdm(sizes1):
 
-        dt8 = raw_data_reader(L, sims[dm],  kws[dm], lmbd_func)
+        dt8 = raw_data_reader(L, sims[dm],  kws[dm], Nkws[dm], lmbd_func)
         dt_ave = trajectory_average(dt8[0]) # Mean
         #dt_std = np.std(dt8[0], axis=1) # Standard Deviation
         print(len(dt8[0][0]))
